@@ -80,6 +80,7 @@ int main(void){
     for(;;){
 
         PORT1OUT->reg.bit3 = 1;
+        __delay_cycles(BLINK_CYCLES);
 
         for(int i = 0; i < 5;){
 
