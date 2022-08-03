@@ -9,10 +9,11 @@ INC_DIR = ./inc
 CC = msp430-elf-gcc
 GDB = mspdebug
 GDB_ELF = msp430-elf-gdb
-GDB_SCRIPT = msp430.gdb
+TARGET_GDB_SCRIPT = msp430.gdb
 
-
-CFLAGS = -I . -I$(INC_DIR) -mmcu=$(DEVICE) -g -mhwmult=auto
+# -g3 includes macro information
+# -gdwarf-2 includes debugger information needed by the target gdb in DWARF Debugger Format
+CFLAGS = -I . -I$(INC_DIR) -mmcu=$(DEVICE) -g3 -gdwarf-2 -mhwmult=auto
 LFLAGS = -L . -L$(INC_DIR)
 
 SRCS = $(wildcard *.c)
@@ -35,10 +36,10 @@ install: $(TARGET)
 	$(GDB) $(DRIVER) "prog $^" --allow-fw-update
 
 debug_init:
-	$(GDB) $(DRIVER) gdb
+	$(GDB) $(DRIVER) gdb &
 
 debug_start:
-	$(GDB_ELF) $(TARGET) -x $(GDB_SCRIPT)
+	$(GDB_ELF) -q $(TARGET) -x $(TARGET_GDB_SCRIPT)
 
 clean:
 	rm -rf $(OBJ)
